@@ -236,3 +236,35 @@ describe('decorator with separate validation constraint class', () => {
     });
   });
 });
+
+describe('decorator validation context', () => {
+  it('should receive validation context', () => {
+    const validationContext = { audience: 'admin' }
+
+    function AdminOnly(validationOptions?: ValidationOptions) {
+      return function (object: object, propertyName: string): void {
+        registerDecorator({
+          target: object.constructor,
+          propertyName: propertyName,
+          options: validationOptions,
+          validator: {
+            validate: function (value: any, args: ValidationArguments): boolean {
+              expect(args.validationContext).toBe(validationContext)
+              return true
+            }
+          }
+        });
+      };
+    }
+
+    class UserModel {
+      @AdminOnly()
+      deletedAt: Date
+    }
+
+    const model =  new UserModel()
+    model.deletedAt = new Date()
+
+    validator.validate(model, { validationContext })
+  })
+})

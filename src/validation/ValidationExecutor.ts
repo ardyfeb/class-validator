@@ -260,6 +260,7 @@ export class ValidationExecutor {
           object: object,
           value: value,
           constraints: metadata.constraints,
+          validationContext: this.validatorOptions?.validationContext
         };
 
         if (!metadata.each || !(value instanceof Array || value instanceof Set || value instanceof Map)) {
@@ -402,6 +403,7 @@ export class ValidationExecutor {
       object: object,
       value: value,
       constraints: metadata.constraints,
+      validationContext: this.validatorOptions?.validationContext
     };
 
     let message = metadata.message || '';
